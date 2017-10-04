@@ -1,5 +1,12 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_mysqldb import MySQL
+
+from flask_wtf import Form
+from wtforms import StringField
+
+class NewStudentForm(Form):
+    name = StringField('Student Name')
+    email = StringField('Email')
 
 mysql = MySQL()
 app = Flask(__name__)
@@ -22,7 +29,13 @@ def hello():
     rv = cur.fetchall() #Retreive all rows returend by the SQL statment
     return str(rv)      #Return the data in a string format
 
+@app.route("/add")
+def add():
+    form = NewStudentForm()
+    return render_template('add.html', form=form)
+    #cur = mysql.connection.cursor()
+    #cur.execute('''INSET INTO students (studentName, email) VALUES ('Michael Jones', 'm.jones@mydit.ie')''')
+
 
 if __name__ == "__main__":
         app.run(host='0.0.0.0', port='5000') #Run the flask app at port 5000
-
